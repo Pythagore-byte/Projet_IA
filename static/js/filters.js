@@ -1,19 +1,24 @@
-// Fonction pour charger dynamiquement les genres
+
+
+// Chargement dynamique des genres avec cases carrées
 async function loadGenres() {
     const response = await fetch("/api/genres");
     const data = await response.json();
     const genresMenu = document.getElementById("genresMenu");
-    genresMenu.innerHTML = ""; // Nettoyer le conteneur avant d'ajouter des genres
+
     data.genres.forEach(genre => {
         const div = document.createElement("div");
-        div.className = "form-check form-check-inline";
+        div.className = "col-6 col-md-3"; // Ajuste selon la largeur souhaitée
         div.innerHTML = `
-            <input class="form-check-input" type="checkbox" id="genre_${genre}" name="genres_filter" value="${genre}">
-            <label class="form-check-label" for="genre_${genre}">${genre}</label>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="genre_${genre}" name="genres_filter" value="${genre}">
+                <label class="form-check-label" for="genre_${genre}">${genre}</label>
+            </div>
         `;
         genresMenu.appendChild(div);
     });
 }
+
 
 async function loadFilmTitles() {
     try {
@@ -50,31 +55,61 @@ async function loadDecades() {
 }
 
  // Chargement dynamique des collections (avec recherche)
- async function loadCollections() {
+//  async function loadCollections() {
+//     const response = await fetch("/api/collections");
+//     const data = await response.json();
+//     const collectionsList = document.getElementById("collectionsList");
+//     const searchBox = document.getElementById("collectionsSearch");
+
+//     // Fonction pour filtrer les collections
+//     function filterCollections(query) {
+//         collectionsList.innerHTML = "";
+//         const filtered = data.collections.filter(c => c.toLowerCase().includes(query.toLowerCase()));
+//         filtered.forEach(collection => {
+//             const div = document.createElement("div");
+//             div.className = "form-check";
+//             div.innerHTML = `
+//                 <input class="form-check-input" type="checkbox" id="collection_${collection}" name="collections_filter" value="${collection}">
+//                 <label class="form-check-label" for="collection_${collection}">${collection}</label>
+//             `;
+//             collectionsList.appendChild(div);
+//         });
+//     }
+//     // Initialisation
+//     searchBox.addEventListener("input", (e) => filterCollections(e.target.value));
+//     filterCollections("");
+// }
+
+// Chargement dynamique des collections avec suggestions dans une datalist
+async function loadCollections() {
     const response = await fetch("/api/collections");
     const data = await response.json();
     const collectionsList = document.getElementById("collectionsList");
-    const searchBox = document.getElementById("collectionsSearch");
 
-    // Fonction pour filtrer les collections
-    function filterCollections(query) {
-        collectionsList.innerHTML = "";
-        const filtered = data.collections.filter(c => c.toLowerCase().includes(query.toLowerCase()));
-        filtered.forEach(collection => {
-            const div = document.createElement("div");
-            div.className = "form-check";
-            div.innerHTML = `
-                <input class="form-check-input" type="checkbox" id="collection_${collection}" name="collections_filter" value="${collection}">
-                <label class="form-check-label" for="collection_${collection}">${collection}</label>
-            `;
-            collectionsList.appendChild(div);
-        });
-    }
+    // Nettoyer la liste avant d'ajouter de nouvelles suggestions
+    collectionsList.innerHTML = "";
 
-    // Initialisation
-    searchBox.addEventListener("input", (e) => filterCollections(e.target.value));
-    filterCollections("");
+    // Parcourir les données et parser les objets et print le nom de la collection sur le terminal
+    data.collections.forEach(collection => {
+        try {
+            const parsedCollection = JSON.parse(collection); // Parser la chaîne en objet
+            print(parsedCollection);
+            if (parsedCollection.name) { // Extraire uniquement le champ 'name'
+
+                const option = document.createElement("option");
+                option.value = parsedCollection.name; // Utiliser le nom de la collection
+                print(parsedCollection.name);
+                collectionsList.appendChild(option);
+            }
+        } catch (error) {
+            console.error("Erreur lors du parsing des collections :", error);
+        }
+    });
 }
+
+
+
+
 
 // Afficher/Masquer le conteneur des filtres
 function toggleFilters() {
@@ -82,10 +117,14 @@ function toggleFilters() {
     filterContainer.style.display = filterContainer.style.display === "none" ? "block" : "none";
 }
 
-// Afficher/Masquer un sous-menu spécifique
+// Fonction pour afficher/masquer un menu spécifique
 function toggleFilterMenu(menuId) {
     const menu = document.getElementById(menuId);
-    menu.style.display = menu.style.display === "none" ? "flex" : "none";
+    if (menu.style.display === "none" || menu.style.display === "") {
+        menu.style.display = "flex"; // Affiche les options sous forme de grille
+    } else {
+        menu.style.display = "none"; // Cache les options
+    }
 }
 
 

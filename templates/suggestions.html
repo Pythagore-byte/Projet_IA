@@ -10,8 +10,12 @@
 </head>
 <body>
     <!-- En-tête du site -->
-    <header class="site-header">
-        <h1>PickMyFlick</h1>
+    <header class="site-header text-center my-4">
+        <h1>
+            <a href="/" class="text-decoration-none text-light;" style="font-weight: bold;color: inherit;">
+                PickMyFlick
+            </a>
+        </h1>
     </header>
 
     <!-- Conteneur principal -->
@@ -21,6 +25,7 @@
                 MovieRecommander
             </a>
         </h2>
+    
         
         <form method="post" action="/suggestions" class="mt-4">
             <!-- Barre de recherche -->
@@ -43,18 +48,42 @@
             <div id="filterContainer" class="filter-container" style="display: none;">
                 <!-- Filtre par genres -->
                 <div class="filter-item mb-3">
-                    <p onclick="toggleFilterMenu('genresMenu')" class="filter-toggle">Genres :</p>
-                    <div id="genresMenu" class="filter-menu row g-3"></div>
+                    <p class="filter-toggle" onclick="toggleFilterMenu('genresMenu')">Genres :</p>
+                    <div id="genresMenu" class="filter-menu row g-2" style="display: none;">
+                        <!-- Les genres seront injectés dynamiquement ici -->
+                    </div>
                 </div>
 
-                <!-- Filtre par collections -->
+
+
+                <!-- Filtre par collections
                 <div class="filter-item mb-3">
                     <p onclick="toggleFilterMenu('collectionsMenu')" class="filter-toggle">Collections :</p>
                     <div id="collectionsMenu" class="filter-menu">
                         <input type="text" id="collectionsSearch" class="form-control mb-2" placeholder="Recherchez une collection...">
                         <div id="collectionsList" class="row g-3"></div>
                     </div>
+                </div> -->
+
+                <!-- Filtre par collections
+                <div class="filter-item mb-3">
+                    <p class="filter-title" onclick="toggleFilterMenu('collectionsMenu')">Collections :</p>
+                    <div id="collectionsMenu" class="filter-menu">
+                        <input type="text" id="collectionsSearch" name="collections_filter" class="form-control mb-2" list="collectionsList" placeholder="Tapez le nom d'une collection...">
+                        <datalist id="collectionsList"></datalist>
+                    </div>
+                </div> -->
+
+                <!-- Filtre par collections -->
+                <div class="filter-item mb-3">
+                    <p class="filter-title" onclick="toggleFilterMenu('collectionsMenu')">Collections :</p>
+                    <div id="collectionsMenu" class="filter-menu">
+                        <input type="text" id="collectionsSearch" name="collections_filter" class="form-control mb-2" list="collectionsList" placeholder="Tapez une collection...">
+                        <datalist id="collectionsList"></datalist>
+                    </div>
                 </div>
+
+
 
                 <!-- Filtre par décennies -->
                 <div class="filter-item mb-3">
